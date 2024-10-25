@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Measurements Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .converter {
+            border: 1px solid #333;
+            padding: 15px;
+            border-radius: 8px;
+            width: 260px;
+            text-align: center;
+            background-color: #fff;
+        }
+        .converter select, .converter input, .converter button {
+            margin-top: 10px;
+            padding: 8px;
+            width: 90%;
+            font-size: 16px;
+        }
+        .result {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Measurements Converter</h1>
+
+    <div class="converter">
+        <select id="category">
+            <option value="length">Length</option>
+            <option value="weight">Weight</option>
+            <option value="temperature">Temperature</option>
+        </select>
+
+        <select id="unit1"></select>
+        <select id="unit2"></select>
+
+        <input type="number" id="value1" placeholder="Enter value">
+        <button id="reset-btn">Reset</button>
+
+        <div class="result" id="result-value"></div>
+    </div>
+
+    <script>
+        const categorySelect = document.getElementById('category');
+        const unit1Select = document.getElementById('unit1');
+        const unit2Select = document.getElementById('unit2');
+        const valueInput = document.getElementById('value1');
+        const resultDisplay = document.getElementById('result-value');
+        const resetBtn = document.getElementById('reset-btn');
+
+        const units = {
+            length: {
+                meters: 1,
+                kilometers: 1000,
+                miles: 1609.34,
+                feet: 0.3048,
+                inches: 0.0254
+            },
+            weight: {
+                grams: 1,
+                kilograms: 1000,
+                pounds: 453.592,
+                ounces: 28.3495
+            },
+            temperature: {
+                celsius: 'celsius',
+                fahrenheit: 'fahrenheit',
+                kelvin: 'kelvin'
+            }
+        };
+
+        function populateUnits(category) {
+            unit1Select.innerHTML = '';
+            unit2Select.innerHTML = '';
+            const unitOptions = Object.keys(units[category]);
+
+            unitOptions.forEach(unit => {
+                const option1 = document.createElement('option');
+                option1.value = unit;
+                option1.textContent = unit;
+                unit1Select.appendChild(option1);
+
+                const option2 = document.createElement('option');
+                option2.value = unit;
+                option2.textContent = unit;
+                unit2Select.appendChild(option2);
+            });
+        }
+
+        function convert(category, value, unitFrom, unitTo) {
+            if (category === 'temperature') {
+                return convertTemperature(value, unitFrom, unitTo);
+            }
+            const factorFrom = units[category][unitFrom];
+            const factorTo = units[category][unitTo];
+            return (value * factorFrom) / factorTo;
+        }
+
+        function convertTemperature(value, unitFrom, unitTo) {
+            if (unitFrom === unitTo) return value;
+            let celsius;
+            if (unitFrom === 'celsius') celsius = value;
+            else if (unitFrom === 'fahrenheit') celsius = (value - 32) * 5/9;
+            else if (unitFrom === 'kelvin') celsius = value - 273.15;
+
+            if (unitTo === 'celsius') return celsius;
+            if (unitTo === 'fahrenheit') return (celsius * 9/5) + 32;
+            if (unitTo === 'kelvin') return celsius + 273.15;
+        }
+
+        function updateResult() {
+            const category = categorySelect.value;
+            const value = parseFloat(valueInput.value);
+            const unitFrom = unit1Select.value;
+            const unitTo = unit2Select.value;
+
+            if (!isNaN(value)) {
+                const result = convert(category, value, unitFrom, unitTo);
+                resultDisplay.textContent = `${value} ${unitFrom} = ${result.toFixed(2)} ${unitTo}`;
+            } else {
+                resultDisplay.textContent = 'Enter a valid number';
+            }
+        }
+
+        categorySelect.addEventListener('change', () => {
+            populateUnits(categorySelect.value);
+            updateResult();
+        });
+
+        unit1Select.addEventListener('change', updateResult);
+        unit2Select.addEventListener('change', updateResult);
+        valueInput.addEventListener('input', updateResult);
+
+        resetBtn.addEventListener('click', () => {
+            valueInput.value = '';
+            resultDisplay.textContent = '';
+        });
+
+        populateUnits(categorySelect.value);
+    </script>
+</body>
+</html>

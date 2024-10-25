@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Converter with Light Bulb Circuit</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .circuit {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px 0;
+            gap: 8px;
+        }
+        .bulb {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid black;
+            cursor: pointer;
+        }
+        .bulb.on { background-color: red; }
+        .bulb.off { background-color: grey; }
+        .panel {
+            font-size: 18px;
+            text-align: center;
+            margin-top: 15px;
+        }
+        .binary-value, .decimal-value { font-weight: bold; }
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        button {
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Binary Converter with Light Bulb Circuit</h1>
+
+    <!-- Controls for bit length -->
+    <div class="controls">
+        <button onclick="setBitLength(8)">8-bit</button>
+        <button onclick="setBitLength(16)">16-bit</button>
+        <button onclick="setBitLength(32)">32-bit</button>
+    </div>
+
+    <!-- Circuit display -->
+    <div class="circuit" id="circuit"></div>
+
+    <!-- Binary and Decimal Values -->
+    <div class="panel">
+        Binary Value: <span class="binary-value" id="binaryValue">00000000</span><br>
+        Decimal Value: <span class="decimal-value" id="decimalValue">0</span>
+    </div>
+
+    <script>
+        const circuitDiv = document.getElementById('circuit');
+        const binaryValueDisplay = document.getElementById('binaryValue');
+        const decimalValueDisplay = document.getElementById('decimalValue');
+
+        let bulbs = [];
+        let bitLength = 8;
+
+        // Update binary and decimal values
+        function updateValues() {
+            const binaryValue = bulbs.map(bulb => bulb.classList.contains('on') ? '1' : '0').join('');
+            const decimalValue = parseInt(binaryValue, 2);
+
+            binaryValueDisplay.textContent = binaryValue.padStart(bitLength, '0');
+            decimalValueDisplay.textContent = decimalValue;
+        }
+
+        // Create bulbs based on bit length
+        function createBulbs() {
+            circuitDiv.innerHTML = '';
+            bulbs = [];
+
+            for (let i = 0; i < bitLength; i++) {
+                const bulb = document.createElement('div');
+                bulb.classList.add('bulb', 'off');
+                bulb.onclick = () => {
+                    bulb.classList.toggle('on');
+                    bulb.classList.toggle('off');
+                    updateValues();
+                };
+                bulbs.push(bulb);
+                circuitDiv.appendChild(bulb);
+            }
+            updateValues();
+        }
+
+        // Set bit length and recreate bulbs
+        function setBitLength(length) {
+            bitLength = length;
+            createBulbs();
+        }
+
+        // Initialize with default 8-bit
+        setBitLength(8);
+    </script>
+
+</body>
+</html>
