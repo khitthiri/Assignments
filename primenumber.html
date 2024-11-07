@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prime Number</title>
+</head>
+<body>
+    <h1>Prime Number</h1>
+    <script>
+function checkPrimeNum(num) {
+    if (num <= 1) {
+        return false; 
+    }
+    for (let i = 2; i <= Math.sqrt(num); i++) {
+        if (num % i === 0) {
+            return false; 
+        }
+    }
+    return true;
+}
+
+function findPrimesInRange(start, end) {
+    let primes = [];
+    for (let i = start; i <= end; i++) {
+        if (checkPrimeNum(i)) {  
+            primes.push(i);  
+        }
+    }
+    return primes;
+}
+
+function messageFormatter(input) {
+    if (typeof input === "number") {
+        if (checkPrimeNum(input)) {
+            return input + " is a prime number."; 
+        } else {
+            return input + " is not a prime number.";
+        }
+    } else if (Array.isArray(input) && input.length === 2 && typeof input[0] === "number" && typeof input[1] === "number") {
+        const primes = findPrimesInRange(input[0], input[1]);
+        if (primes.length === 0) {
+            return "No prime numbers found between " + input[0] + " and " + input[1] + ".";
+        } else {
+            return "Prime numbers from " + input[0] + " to " + input[1] + ": [" + primes.join(", ") + "]"; 
+        }
+    } else {
+        return "Invalid Input"; 
+    }
+}
+
+// Instructor's test cases
+// ===== ===== ===== ===== =====
+
+console.log(messageFormatter(2));
+// Expected Output: 2 is a prime number.
+
+console.log(messageFormatter(1));
+// Expected Output: 1 is NOT a prime number.
+
+console.log(messageFormatter(13));
+// Expected Output: 13 is a prime number.
+
+console.log(messageFormatter(25));
+// Expected Output: 25 is NOT a prime number.
+
+console.log(messageFormatter([10, 20]));
+// Expected Output: Primes between 10 and 20: [11, 13, 17, 19]
+
+console.log(messageFormatter([30, 50]));
+// Expected Output: Primes between 30 and 50: [31, 37, 41, 43, 47]
+
+console.log(messageFormatter('test'));
+// Expected Output: Invalid input. Please provide a number or a valid range (array of two numbers).
+    </script>
+</body>
+</html>
