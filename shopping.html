@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="shopping.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Shopping Cart with Discounts</h1>
+
+        <div class="form">
+            <input type="text" id="itemName" placeholder="Item Name">
+            <input type="number" id="itemPrice" placeholder="Price" step="0.01">
+            <input type="number" id="itemQuantity" placeholder="Quantity" value="1" min="1">
+            <button onclick="addItem()">Add Item</button>
+        </div>
+
+        <div class="form">
+            <input type="number" id="discount" placeholder="Discount (%)" step="1" min="0">
+            <button onclick="applyDiscount()">Apply Discount</button>
+        </div>
+
+        <h2>Cart Items</h2>
+        <div id="cartItems"></div>
+
+        <h3>Total: <span id="totalAmount">$0.00</span></h3>
+    </div>
+
+    <script src="shopping.js"></script>
+</body>
+</html>
